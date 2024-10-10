@@ -177,7 +177,7 @@ resource "aws_iam_role_policy_attachment" "blue_green_node_group_registry_policy
 # Create OIDC Provider for EKS Cluster
 resource "aws_iam_openid_connect_provider" "oidc_provider" {
   client_id_list = ["sts.amazonaws.com"]  # Allow AWS STS (Security Token Service) to use this provider
-  thumbprint_list = [aws_eks_cluster.blue_green.identity[0].oidc.issuer]  # Use OIDC provider's thumbprint
-  url = aws_eks_cluster.blue_green.identity[0].oidc.issuer  # OIDC provider URL for the EKS cluster
+ thumbprint_list = ["9451AD2B53C7F41FAB22886CC07D482085336561"]  # Use the SHA-1 thumbprint (without colons)
+  url = aws_eks_cluster.blue_green.identity[0].oidc[0].issuer  # OIDC provider URL for the EKS cluster
 }
 
