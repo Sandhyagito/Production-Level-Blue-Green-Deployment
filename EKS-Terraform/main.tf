@@ -133,3 +133,4 @@ resource "aws_iam_openid_connect_provider" "oidc_provider" {
   url = aws_eks_cluster.blue_green.identity[0].oidc.issuer
 }
 
+
