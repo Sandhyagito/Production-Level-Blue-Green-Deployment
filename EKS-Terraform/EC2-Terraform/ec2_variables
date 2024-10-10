@@ -1,0 +1,28 @@
+# ec2_variables.tf
+
+variable "vpc_id" {
+  description = "The VPC ID for the EC2 instances"
+  type        = string
+}
+
+variable "subnet_id_0" {
+  description = "The ID of the first Subnet for the EC2 instances"
+  type        = string
+}
+
+variable "instance_type" {
+  description = "Instance type for EC2"
+  default     = "t3.medium"
+}
+
+variable "key_name" {
+  description = "SSH Key name"
+  type        = string
+  default     = "bluegreen-key"  # Your SSH key name
+}
+
+variable "ami_id" {
+  description = "AMI ID for the EC2 instances"
+  type        = string
+}
+

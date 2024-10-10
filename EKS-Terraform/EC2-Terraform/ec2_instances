@@ -1,0 +1,194 @@
+# ec2_instances.tf
+
+# Security Group for Jenkins
+resource "aws_security_group" "jenkins_sg" {
+  vpc_id = var.vpc_id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Allow HTTP access
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Allow HTTPS access
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Allow SSH access
+  }
+
+  ingress {
+    from_port   = 500
+    to_port     = 1000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Custom range 500-1000
+  }
+
+  ingress {
+    from_port   = 1000
+    to_port     = 11000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Custom range 1000-11000
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]  # Allow all outbound traffic
+  }
+
+  tags = {
+    Name = "jenkins-sg"
+  }
+}
+
+# Security Group for Nexus
+resource "aws_security_group" "nexus_sg" {
+  vpc_id = var.vpc_id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 500
+    to_port     = 1000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 1000
+    to_port     = 11000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "nexus-sg"
+  }
+}
+
+# Security Group for SonarQube
+resource "aws_security_group" "sonarqube_sg" {
+  vpc_id = var.vpc_id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 500
+    to_port     = 1000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 1000
+    to_port     = 11000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "sonarqube-sg"
+  }
+}
+
+# Jenkins EC2 Instance
+resource "aws_instance" "jenkins" {
+  ami                    = var.ami_id  # Reference the ami_id from variables.tf
+  instance_type          = var.instance_type
+  subnet_id              = var.subnet_id_0  # Reference the first subnet
+  vpc_security_group_ids = [aws_security_group.jenkins_sg.id]  # Use vpc_security_group_ids
+  key_name               = var.key_name
+
+  tags = {
+    Name = "jenkins-server"
+  }
+}
+
+# Nexus EC2 Instance
+resource "aws_instance" "nexus" {
+  ami                    = var.ami_id  # Reference the ami_id from variables.tf
+  instance_type          = var.instance_type
+  subnet_id              = var.subnet_id_0  # Reference the first subnet
+  vpc_security_group_ids = [aws_security_group.nexus_sg.id]  # Use vpc_security_group_ids
+  key_name               = var.key_name
+
+  tags = {
+    Name = "nexus-server"
+  }
+}
+
+# SonarQube EC2 Instance
+resource "aws_instance" "sonarqube" {
+  ami                    = var.ami_id  # Reference the ami_id from variables.tf
+  instance_type          = var.instance_type
+  subnet_id              = var.subnet_id_0  # Reference the first subnet
+  vpc_security_group_ids = [aws_security_group.sonarqube_sg.id]  # Use vpc_security_group_ids
+  key_name               = var.key_name
+
+  tags = {
+    Name = "sonarqube-server"
+  }
+}
+
